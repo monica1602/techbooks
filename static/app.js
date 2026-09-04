@@ -174,14 +174,12 @@ function renderResults(data) {
   resultsCount.textContent = `${data.total} livro${data.total !== 1 ? "s" : ""} encontrado${data.total !== 1 ? "s" : ""}, ordenados por nível`;
 
   data.results.forEach((book, index) => {
-    const card = createBookCard(book, index + 1);
-    // Animação escalonada
-    card.style.animationDelay = `${index * 50}ms`;
-    booksGrid.appendChild(card);
+    const cardEl = createBookCard(book, index + 1);
+    cardEl.style.animationDelay = `${index * 50}ms`;
+    booksGrid.appendChild(cardEl);
   });
 
   showState("results");
-  // Scroll suave até os resultados
   resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -219,7 +217,7 @@ function createBookCard(book, position) {
   pagesEl.textContent = book.pages ? `${book.pages} págs.` : "";
   langEl.textContent  = book.language || "Português";
 
-  // Tags (máx 4 para não poluir)
+  // Tags (máx 4)
   const tagsContainer = card.querySelector(".card-tags");
   const displayTags = (book.tags || []).slice(0, 4);
   displayTags.forEach(tag => {
@@ -234,7 +232,8 @@ function createBookCard(book, position) {
   link.href = book.buy_link || `https://www.amazon.com.br/s?k=${encodeURIComponent(book.title)}`;
   link.setAttribute("aria-label", `Ver "${book.title}" na Amazon`);
 
-  return fragment;
+  // Retorna o elemento <article> diretamente, não o fragment
+  return card;
 }
 
 
