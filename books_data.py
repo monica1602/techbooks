@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 # Banco de dados de livros técnicos
@@ -828,12 +829,12 @@ SEARCH_SUGGESTIONS = [
 ]
 
 
-def _tokenize(text: str) -> set:
-    """Quebra o texto em tokens de palavras inteiras (minúsculas, sem pontuação)."""
-    return set(re.findall(r"[a-záàãâéêíóôõúüçñ0-9]+", text.lower()))
+def _tokenize(text):
+    """Quebra o texto em tokens de palavras (minúsculas)."""
+    return set(re.findall(r"[\w]+", text.lower(), re.UNICODE))
 
 
-def search_books(query: str) -> list:
+def search_books(query):
     """
     Busca livros por query (tag, título, autor ou descrição).
     Retorna lista ordenada por nível de dificuldade (mais fácil ao mais difícil).
@@ -842,7 +843,7 @@ def search_books(query: str) -> list:
         return []
 
     query_clean = query.strip().lower()
-    query_tokens = set(re.findall(r"[a-záàãâéêíóôõúüçñ0-9]+", query_clean))
+    query_tokens = set(re.findall(r"[\w]+", query_clean, re.UNICODE))
 
     scored_books = []
 
@@ -877,13 +878,13 @@ def search_books(query: str) -> list:
                 elif len(tag) >= 3 and tag in word:
                     score += 3          # tag é substring da palavra (ex: "sql" em "mysql")
 
-            if re.search(r"\b" + re.escape(word) + r"\b", title_lower):
+            if re.search(r"\b" + re.escape(word) + r"\b", title_lower, re.UNICODE):
                 score += 2
 
-            if re.search(r"\b" + re.escape(word) + r"\b", desc_lower):
+            if re.search(r"\b" + re.escape(word) + r"\b", desc_lower, re.UNICODE):
                 score += 1
 
-            if re.search(r"\b" + re.escape(word) + r"\b", auth_lower):
+            if re.search(r"\b" + re.escape(word) + r"\b", auth_lower, re.UNICODE):
                 score += 1
 
         if score > 0:

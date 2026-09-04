@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, jsonify, request, send_from_directory
 from books_data import search_books, BOOKS, SEARCH_SUGGESTIONS
 import os
