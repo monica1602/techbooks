@@ -1,3 +1,5 @@
+import re
+
 # Banco de dados de livros técnicos
 # Nível de dificuldade: 1 = Iniciante, 2 = Básico, 3 = Intermediário, 4 = Avançado, 5 = Expert
 
@@ -828,7 +830,6 @@ SEARCH_SUGGESTIONS = [
 
 def _tokenize(text: str) -> set:
     """Quebra o texto em tokens de palavras inteiras (minúsculas, sem pontuação)."""
-    import re
     return set(re.findall(r"[a-záàãâéêíóôõúüçñ0-9]+", text.lower()))
 
 
@@ -836,21 +837,9 @@ def search_books(query: str) -> list:
     """
     Busca livros por query (tag, título, autor ou descrição).
     Retorna lista ordenada por nível de dificuldade (mais fácil ao mais difícil).
-
-    Scoring (por palavra da query encontrada):
-      - tag exata ou tag contém a palavra: +4
-      - palavra contém tag completa:       +3
-      - título:                            +2
-      - descrição:                         +1
-      - autor:                             +1
-
-    Para queries de múltiplas palavras (ex: "machine learning"),
-    também testa a query completa como unidade nas tags e no título.
     """
     if not query or not query.strip():
         return []
-
-    import re
 
     query_clean = query.strip().lower()
     query_tokens = set(re.findall(r"[a-záàãâéêíóôõúüçñ0-9]+", query_clean))

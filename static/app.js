@@ -134,7 +134,14 @@ async function performSearch(query) {
   window.history.pushState({}, "", url);
 
   try {
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
+    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
     const data = await res.json();
 
     if (!res.ok) {
@@ -150,7 +157,11 @@ async function performSearch(query) {
     renderResults(data);
 
   } catch (err) {
-    showError("Não foi possível conectar ao servidor. Tente novamente.");
+    if (err.name === "AbortError") {
+      showError("A busca demorou muito. Tente novamente em alguns segundos.");
+    } else {
+      showError("Não foi possível conectar ao servidor. Tente novamente.");
+    }
   }
 }
 
