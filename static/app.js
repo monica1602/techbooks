@@ -238,15 +238,38 @@ function createBookCard(book, position) {
 
 
 // ── Controle de estados de UI ─────────────────────────────────────────────────
-function showState(state) {
-  welcomeState.hidden   = state !== "welcome";
-  loadingState.hidden   = state !== "loading";
-  errorState.hidden     = state !== "error";
-  emptyState.hidden     = state !== "empty";
-  resultsSection.hidden = state !== "results";
+const STATES = ["welcomeState", "loadingState", "errorState", "emptyState", "resultsSection"];
 
-  // Acessibilidade: move foco para área de resultado
-  if (state === "results") {
+function showState(state) {
+  // Esconde todos primeiro
+  welcomeState.style.display   = "none";
+  loadingState.style.display   = "none";
+  errorState.style.display     = "none";
+  emptyState.style.display     = "none";
+  resultsSection.style.display = "none";
+
+  welcomeState.hidden   = true;
+  loadingState.hidden   = true;
+  errorState.hidden     = true;
+  emptyState.hidden     = true;
+  resultsSection.hidden = true;
+
+  // Mostra só o estado ativo
+  if (state === "welcome") {
+    welcomeState.style.display = "block";
+    welcomeState.hidden = false;
+  } else if (state === "loading") {
+    loadingState.style.display = "flex";
+    loadingState.hidden = false;
+  } else if (state === "error") {
+    errorState.style.display = "flex";
+    errorState.hidden = false;
+  } else if (state === "empty") {
+    emptyState.style.display = "flex";
+    emptyState.hidden = false;
+  } else if (state === "results") {
+    resultsSection.style.display = "block";
+    resultsSection.hidden = false;
     resultsSection.setAttribute("tabindex", "-1");
     resultsSection.focus();
   }
